@@ -30,6 +30,12 @@
 (require 'noflet)
 (require 'el-mock)
 (require 'ert-async)
+(require 'cl-lib)
+
+(defvar cask-test/link-path)
+(defvar cask-test/sandbox-path)
+(defvar cask-test/fixtures-path)
+(defvar cask-test/cvs-repo-path)
 
 (defun cask-same-items (a b)
     "`-same-items?' for A, B."
@@ -55,8 +61,6 @@
   (f-expand "link" cask-test/sandbox-path))
 
 (defvar cask-test/cvs-repo-path nil)
-
-(add-to-list 'load-path cask-test/root-path)
 
 ;; Avoid Emacs 23 interupting the tests with:
 ;;   File bar-autoloads.el changed on disk.  Reread from disk? (yes or no)
@@ -104,17 +108,15 @@ The items in the list are on the form (package version)."
   `(f-with-sandbox (list cask-test/sandbox-path
                          cask-test/cvs-repo-path
                          cask-tmp-path)
-     (unwind-protect
-         (let* ((default-directory cask-test/sandbox-path)
-                (cask-tmp-path (f-expand "tmp" cask-test/sandbox-path))
-                (cask-tmp-checkout-path (f-expand "checkout" cask-tmp-path))
-                (cask-tmp-packages-path (f-expand "packages" cask-tmp-path)))
-           (when (f-dir? cask-test/sandbox-path)
-             (f-delete cask-test/sandbox-path 'force))
-           (f-mkdir cask-test/sandbox-path)
-           (f-mkdir cask-test/link-path)
-           ,@body)
-       (epl-reset))))
+     (let* ((default-directory cask-test/sandbox-path)
+            (cask-tmp-path (f-expand "tmp" cask-test/sandbox-path))
+            (cask-tmp-checkout-path (f-expand "checkout" cask-tmp-path))
+            (cask-tmp-packages-path (f-expand "packages" cask-tmp-path)))
+       (when (f-dir? cask-test/sandbox-path)
+         (f-delete cask-test/sandbox-path 'force))
+       (f-mkdir cask-test/sandbox-path)
+       (f-mkdir cask-test/link-path)
+       ,@body)))
 
 (defmacro cask-test/with-bundle (&optional forms &rest body)
   "Write FORMS to sandbox Cask-file and yield BODY.
@@ -133,7 +135,8 @@ asserted that only those packages are installed"
       (when ,forms
         (let ((cask-file (f-expand "Cask" cask-test/sandbox-path)))
           (cask-test/write-forms ,forms cask-file)))
-      (let (cask-current-bundle (bundle (cask-setup cask-test/sandbox-path)))
+      (let (cask-current-bundle
+            (bundle (cask-setup cask-test/sandbox-path)))
         ,@body
         ,(when (plist-member body :packages)
            `(let ((expected-packages ,(plist-get body :packages))
@@ -146,15 +149,12 @@ asserted that only those packages are installed"
                   (let ((actual-package-version (cadr actual-package))
                         (expected-package-version (cadr expected-package)))
                     (when expected-package-version
-                      (should (string= actual-package-version expected-package-version))))))))
-        ))))
+                      (should (string= actual-package-version expected-package-version))))))))))))
 
 (defun cask-test/install (bundle)
   "Install BUNDLE and then reset the environment."
-  (unwind-protect
-      (let (cask-current-bundle)
-        (cask-install bundle))
-    (epl-reset)))
+  (let (cask-current-bundle)
+    (cask-install bundle)))
 
 (defun cask-test/run-command (command &rest args)
   "Run COMMAND with ARGS."
