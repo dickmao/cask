@@ -20,6 +20,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         python_version: [3.6]
+        # beginning of time is 24.3 when cl-flet was defined
         emacs_version: [24.3, 24.4]
     steps:
     - uses: actions/checkout@v2

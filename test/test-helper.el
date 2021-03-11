@@ -113,7 +113,11 @@ The items in the list are on the form (package version)."
             (cask-tmp-checkout-path (f-expand "checkout" cask-tmp-path))
             (cask-tmp-packages-path (f-expand "packages" cask-tmp-path)))
        (when (f-dir? cask-test/sandbox-path)
-         (f-delete cask-test/sandbox-path 'force))
+         (condition-case err
+             (f-delete cask-test/sandbox-path 'force)
+           ;; lack of proper gnutls results in missing gnupg/S.gpg-agent.ssh
+           (file-error (unless (version= emacs-version "24.4")
+                         (signal (car err) (cdr err))))))
        (f-mkdir cask-test/sandbox-path)
        (f-mkdir cask-test/link-path)
        ,@body)))
