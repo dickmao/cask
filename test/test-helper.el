@@ -115,9 +115,8 @@ The items in the list are on the form (package version)."
        (when (f-dir? cask-test/sandbox-path)
          (condition-case err
              (f-delete cask-test/sandbox-path 'force)
-           ;; lack of proper gnutls results in missing gnupg/S.gpg-agent.ssh
-           (file-error (unless (version= emacs-version "24.4")
-                         (signal (car err) (cdr err))))))
+           ;; gnupg/S.gpg-agent.ssh dematerializes on github actions
+           (file-error)))
        (f-mkdir cask-test/sandbox-path)
        (f-mkdir cask-test/link-path)
        ,@body)))
