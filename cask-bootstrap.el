@@ -58,6 +58,8 @@
   (when (version< emacs-version "25.1")
     ;; package-build depends on cl-lib
     (unless (package-installed-p 'cl-lib)
+      (unless package-archive-contents
+        (package-refresh-contents))
       (package-install 'cl-lib))
     (require 'package-recipe (expand-file-name "package-recipe-legacy" cask-directory))
     (require 'package-build (expand-file-name "package-build-legacy" cask-directory)))

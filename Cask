@@ -16,5 +16,4 @@
  (depends-on "el-mock")
  (depends-on "noflet")
  (depends-on "ert-async")
- (depends-on "cl-lib")
  (depends-on "shell-split-string"))
