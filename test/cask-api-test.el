@@ -1164,8 +1164,7 @@
 
 (ert-deftest cask-link-delete-test/no-cask-file ()
   (cask-test/with-bundle nil
-    (should-error
-     (cask-link-delete bundle 'package-a) :type 'cask-no-cask-file)))
+    (should-error (cask-link-delete bundle 'package-a))))
 
 (ert-deftest cask-link-delete-test/with-link ()
   (cask-test/with-bundle
