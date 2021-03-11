@@ -20,7 +20,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         python_version: [3.6]
-        emacs_version: [24.1]
+        emacs_version: [24.3, 24.4]
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-python@v2
