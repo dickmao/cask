@@ -2,15 +2,15 @@ trigger:
   batch: true
   branches:
     exclude:
-	- master
+      - master
   paths:
     exclude:
-	- README.org
+      - README.org
 
 pr:
   paths:
     exclude:
-	- README.org
+      - README.org
 
 strategy:
   matrix:
