@@ -25,4 +25,4 @@ steps:
   submodules: true
 - template: steps/setup-emacs.yml
 - template: steps/setup-cask.yml
-- template: steps/-test.yml
+- template: steps/test.yml
