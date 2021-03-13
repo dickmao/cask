@@ -1,0 +1,36 @@
+trigger:
+  batch: true
+  branches:
+    exclude:
+	- master
+  paths:
+    exclude:
+	- README.org
+
+pr:
+  paths:
+    exclude:
+	- README.org
+
+strategy:
+  matrix:
+    vs2017-win2016:
+      IMAGE_NAME: 'vs2017-win2016'
+
+pool:
+  vmImage: $(IMAGE_NAME)
+
+resources:
+  repositories:
+  - repository: emacs-module-rs
+    type: github
+    name: ubolonton/emacs-module-rs
+    ref: azure-pipelines
+    endpoint: ubolonton
+
+steps:
+- checkout: self
+  submodules: true
+- template: .azure-pipelines/steps/setup-emacs.yml@emacs-module-rs
+- template: .azure-pipelines/steps/setup-cask.yml@emacs-module-rs
+- template: steps/-test.yml

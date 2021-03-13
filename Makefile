@@ -98,6 +98,7 @@ $(SERVANT_NEW_ARCHIVE_CONTENTS): $(SERVANT_NEW_PACKAGES_DIR)/package-a-0.0.2.el
 	$(CASK) exec $(SERVANT) index --packages-path $(SERVANT_NEW_PACKAGES_DIR)
 
 clean:
+	$(CASK) clean-elc
 	rm -rf $(SERVANT_DIR)
 	rm -rf $(DOCBUILDDIR)
 

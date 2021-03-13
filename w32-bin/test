@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+here=$(cd "$(dirname "$BASH_SOURCE")"; pwd)
+source "$here/env.bash"
+
+echo "[!!] Using Emacs binary from $(which $EMACS) version: $($EMACS --version)"
+(
+    cd "$PROJECT_ROOT"
+	w32-bin/cask install
+	w32-bin/cask build
+    w32-bin/cask emacs --batch \
+         -l ert \
+         -f ert-run-tests-batch-and-exit
+)
