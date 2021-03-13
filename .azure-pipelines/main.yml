@@ -1,5 +1,4 @@
 trigger:
-  batch: true
   branches:
     exclude:
       - master
@@ -22,7 +21,6 @@ pool:
 
 steps:
 - checkout: self
-  submodules: true
 - template: steps/setup-emacs.yml
 - template: steps/setup-cask.yml
 - template: steps/test.yml
