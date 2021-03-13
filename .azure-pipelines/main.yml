@@ -20,17 +20,9 @@ strategy:
 pool:
   vmImage: $(IMAGE_NAME)
 
-resources:
-  repositories:
-  - repository: emacs-module-rs
-    type: github
-    name: ubolonton/emacs-module-rs
-    ref: azure-pipelines
-    endpoint: ubolonton
-
 steps:
 - checkout: self
   submodules: true
-- template: .azure-pipelines/steps/setup-emacs.yml@emacs-module-rs
-- template: .azure-pipelines/steps/setup-cask.yml@emacs-module-rs
+- template: steps/setup-emacs.yml
+- template: steps/setup-cask.yml
 - template: steps/-test.yml
