@@ -170,11 +170,6 @@ install: dist
 	  (add-to-list 'package-archives '(\"melpa\" . \"https://melpa.org/packages/\")) \
 	  (package-refresh-contents) \
 	  (package-install-file \"dist/cask-$(shell $(CASK) version).tar\"))"
-	$(eval INSTALLED = $(shell 2>&1 $(EMACS) -Q --batch --eval "(let ((inhibit-message t)) (package-initialize) (princ (directory-file-name (file-name-directory (locate-library \"cask\"))) (function external-debugging-output)))"))
-	@if [ -z "$(INSTALLED)" ] ; then \
-	  echo ERROR: package-install-file failed ; \
-	  false ; \
-	fi
 	$(eval TARGET = \
 	  $(shell if 1>/dev/null which systemd-path ; then \
 	            echo "$$(systemd-path user-binaries)/cask" ; \
@@ -190,7 +185,7 @@ install: dist
 	  [ ! -z "$${GITHUB_WORKFLOW:-}" ] ; \
 	elif [ -L "$(TARGET)" ] ; then \
 	  rm -f "$(TARGET)" ; \
-	  ln -s $(INSTALLED)/bin/cask $(TARGET) ; \
+	  ln -s /root/.emacs.d/elpa/cask-0.8.8/bin/cask $(TARGET) ; \
 	elif [ -e "$(TARGET)" ] ; then \
 	  echo ERROR: Cannot install over $(TARGET) ; \
 	  false ; \
@@ -198,5 +193,5 @@ install: dist
 	  echo ERROR: "$$(dirname $(TARGET))" does not exist ; \
 	  [ ! -z "$${GITHUB_WORKFLOW:-}" ] ; \
 	else \
-	  ln -s $(INSTALLED)/bin/cask $(TARGET) ; \
+	  ln -s /root/.emacs.d/elpa/cask-0.8.8/bin/cask $(TARGET) ; \
 	fi
