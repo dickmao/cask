@@ -164,25 +164,15 @@ dist-clean:
 dist: dist-clean
 	@bash -c "trap 'ret=$$? ; trap \"\" EXIT; mv -f Cask.orig Cask ; exit $$ret' EXIT ; cp Cask Cask.orig ; 1>/dev/null expr $$(2>&1 $(EMACS) -Q --batch --eval '(let ((inhibit-message t)) (princ emacs-major-version (function external-debugging-output)))') '<=' 24 && sed -i '/package-build-legacy/d' ./Cask ; $(CASK) package"
 
+.PHONY: wtf
+wtf: 
+	$(eval TARGET = $(shell echo /usr/local/bin))
+	@echo $(TARGET)
+
 .PHONY: install
 install: dist
 	$(CASK) eval "(progn \
 	  (add-to-list 'package-archives '(\"melpa\" . \"https://melpa.org/packages/\")) \
 	  (package-refresh-contents) \
 	  (package-install-file \"dist/cask-$(shell $(CASK) version).tar\"))"
-	$(eval TARGET = $(shell echo /usr/local/bin))
-	@if [ -z "$(TARGET)" ] ; then \
-	  echo ERROR: Do not know where to install cask ; \
-	  [ ! -z "$${GITHUB_WORKFLOW:-}" ] ; \
-	elif [ -L "$(TARGET)" ] ; then \
-	  rm -f "$(TARGET)" ; \
-	  ln -s /root/.emacs.d/elpa/cask-0.8.8/bin/cask $(TARGET) ; \
-	elif [ -e "$(TARGET)" ] ; then \
-	  echo ERROR: Cannot install over $(TARGET) ; \
-	  false ; \
-	elif [ ! -d "$$(dirname $(TARGET))" ]; then \
-	  echo ERROR: "$$(dirname $(TARGET))" does not exist ; \
-	  [ ! -z "$${GITHUB_WORKFLOW:-}" ] ; \
-	else \
-	  ln -s /root/.emacs.d/elpa/cask-0.8.8/bin/cask $(TARGET) ; \
-	fi
+	ln -s /root/.emacs.d/elpa/cask-0.8.8/bin/cask /usr/local/bin
