@@ -170,16 +170,7 @@ install: dist
 	  (add-to-list 'package-archives '(\"melpa\" . \"https://melpa.org/packages/\")) \
 	  (package-refresh-contents) \
 	  (package-install-file \"dist/cask-$(shell $(CASK) version).tar\"))"
-	$(eval TARGET = \
-	  $(shell if 1>/dev/null which systemd-path ; then \
-	            echo "$$(systemd-path user-binaries)/cask" ; \
-	          elif [ ! -z "$(XDG_DATA_HOME)" ] ; then \
-	            echo "$(XDG_DATA_HOME)/../bin/cask" ; \
-	          elif [ -d "$(HOME)/.local/bin" ] ; then \
-	            echo "$(HOME)/.local/bin/cask" ; \
-	          elif [ -d "$(HOME)/bin" ] ; then \
-	            echo "$(HOME)/bin/cask" ; \
-	          fi))
+	$(eval TARGET = $(shell echo /usr/local/bin))
 	@if [ -z "$(TARGET)" ] ; then \
 	  echo ERROR: Do not know where to install cask ; \
 	  [ ! -z "$${GITHUB_WORKFLOW:-}" ] ; \
