@@ -29,9 +29,9 @@ jobs:
     - uses: purcell/setup-emacs@master
       with:
         version: ${{ matrix.emacs_version }}
-    - uses: actions/setup-python@v1
+    - uses: actions/setup-python@v5
       with:
-        python-version: 3.7
+        python-version: 3.10
     - name: paths
       run: |
         echo "$HOME/local/bin" >> $GITHUB_PATH
