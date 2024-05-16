@@ -460,14 +460,7 @@ time of all files, making the tarball reproducible."
           (process-file
            package-build-tar-executable nil
            (get-buffer-create "*package-build-checkout*") nil
-           "-cf" tar dir
-           ;; Arguments that are need to strip metadata that
-           ;; prevent a reproducable tarball as described at
-           ;; https://reproducible-builds.org/docs/archives.
-           "--sort=name"
-           (format "--mtime=@%d" mtime)
-           "--owner=0" "--group=0" "--numeric-owner"
-           "--pax-option=exthdr.name=%d/PaxHeaders/%f,delete=atime,delete=ctime")
+           "-cf" tar dir)
           (when (and package-build-verbose noninteractive)
             (message "Created %s containing:" (file-name-nondirectory tar))
             (dolist (line (sort (process-lines package-build-tar-executable
